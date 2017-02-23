@@ -36,24 +36,92 @@ class FrontController{
 		$prepare->execute();
 		$data = $prepare->fetch();
 
+		for ($i=0; $i < $data->hauteur; $i++) {
+			for ($j=0; $j < $data->largeur+1; $j++) {
+				//$ver[$i][$j] = ($j==0 || $j==$data->largeur)? 1 : mt_rand(0,1);
+				$ver[$i][$j] = 1;
+			}
+		}
+		for ($i=0; $i < $data->hauteur+1; $i++) {
+			for ($j=0; $j < $data->largeur; $j++) { 
+				//$hor[$i][$j] = ($i==0 || $i==$data->hauteur)? 1 : mt_rand(0,1);
+				$hor[$i][$j] = 1;
+			}
+		}
+		
+		for ($i=0; $i < $data->hauteur; $i++) {
+			for ($j=0; $j < $data->largeur; $j++) { 
+				$map[$i][$j] = $j+($i*$data->largeur);
+			}
+		}
 
-		for ($i=0; $i < $data->largeur+1; $i++) {
-			for ($j=0; $j < $data->hauteur; $j++) { 
-				$ver[$i][$j] = ($j==0 || $j==count($data->largeur)+1)? 1 : mt_rand(0,1);
+		// Génération du labyrinthe
+		for ($k=0; $k < 10; $k++) { 
+			begin:
+			$u = mt_rand(0,$data->hauteur-1);
+			$v = mt_rand(0,$data->largeur-1);
+			$u2= $u;
+			$v2= $v;
+			$val = $map[$u][$v];
+			$val2= NULL;
+			// echo("u = ".$u."<br/>");
+			// echo("v = ".$v."<br/>");
+			// echo("val = ".$map[$u][$v]."<br/>");
+
+			// agirat-on sur $hor ou $ver ?
+			$axis = mt_rand(0,1);
+			// var_dump($axis);
+
+			// incrémentation ou décrémentation ?
+			$sens = mt_rand(0,1);
+			// var_dump($sens);
+
+			if ($axis==0) {
+				$u += $sens;
+				$u2 += ($sens)? 1 : -1;
+
+				if (!isset($map[$u2][$v2])) goto begin;
+				$val2 = $map[$u2][$v2];
+
+				// echo "<br/>".$u2;
+				if ($val != $val2) {
+					if (isset($map[$u][$v]) && $u!=0) {
+						$hor[$u][$v]=0;
+						if ($sens) $map[$u][$v]=$val;
+						else $map[$u-1][$v]=$val;
+					}
+				}
 			}
-		}
-		for ($i=0; $i < $data->largeur; $i++) {
-			for ($j=0; $j < $data->hauteur+1; $j++) { 
-				$hor[$i][$j] = ($j==0 || $j==count($data->hauteur)+2)? 1 : mt_rand(0,1);
+			if ($axis==1) {
+				$v += $sens;
+				$v2 += ($sens)? 1 : -1;
+
+				if (!isset($map[$u2][$v2])) goto begin;
+				$val2 = $map[$u2][$v2];
+
+				// echo "<br/>".$v2;
+				if ($val != $val2) {
+					if (isset($map[$u][$v]) && $v!=0) {
+						$ver[$u][$v]=0;
+						if ($sens) $map[$u][$v]=$val;
+						else $map[$u][$v-1]=$val;
+					}
+				}
 			}
+			echo "<hr/>";
 		}
-		$table=['ver'=>$ver, 'hor'=>$hor];
 
 		/*echo'<pre>';
-			print_r($table);
+			print_r($map);
 		echo'</pre>';*/
 
-		return $this->app['twig']->render('labyrinthe.twig', ['data' => $data, 'table' => $table]);
+		$tables=['ver'=>$ver, 'hor'=>$hor];
+
+		/*echo'<pre>';
+			print_r($map);
+		echo'</pre>';*/
+
+		return $this->app['twig']->render('labyrinthe.twig', ['data' => $data, 'tables' => $tables]);
 
 	}
 }

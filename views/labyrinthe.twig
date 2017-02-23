@@ -31,8 +31,27 @@
 </form>
 
 <div class="col-md-8">
-	<svg width="{{data.largeur*30}}" height="{{data.hauteur*30}}" style="background: #F4F4F4">
-		
+	<svg width="{{data.largeur*30+2}}" height="{{data.hauteur*30+2}}" style="background: #F4F4F4">
+		{% for hor in tables.hor %}
+			{% for wall in hor %}
+
+				{% if wall %}
+					<rect x="{{30*(loop.index0)}}" y="{{30*(loop.parent.loop.index0)}}" width="30" height="2" style="fill:rgb(0,0,255);" />
+				{% endif %}
+
+			{% endfor %}
+		{% endfor %}
+
+		{% for ver in tables.ver %}
+			{% for wall in ver %}
+				{% if wall %}
+					<rect x="{{30*(loop.index0)}}" y="{{30*(loop.parent.loop.index0)}}" width="2" height="30" style="fill:rgb(0,0,255);" />
+				{% endif %}
+
+			{% endfor %}
+		{% endfor %}
+			
+
 	</svg>
 </div>
 
