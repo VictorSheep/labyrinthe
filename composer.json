@@ -1,0 +1,23 @@
+{
+    "name": "victor/labyrinthe",
+    "description": "Application de generation de labyrinthe parfait",
+    "require": {
+        "silex/silex": "^2.0",
+        "twig/twig": "^2.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "VictorSheep",
+            "email": "victor.moutton@gmail.com"
+        }
+    ],
+    "autoload": {
+        "classmap": [
+            ""
+        ],
+        "psr-4":{
+            "": ""
+        }
+    }
+}

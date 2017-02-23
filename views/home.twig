@@ -1,0 +1,39 @@
+{% extends 'layouts/master.twig' %}
+
+{% block title %}
+	<h1 style="text-align:center">Votre Labysheep</h1>
+{% endblock %}
+
+{% block body %}
+<div class="col-md-4">
+</div>
+
+<div class="col-md-4">
+	<form action="/create" method="POST">
+
+		<div class="form-group row">
+		  <label for="largeur" class="col-2 col-form-label">Largeur</label>
+		  <div class="col-10">
+		    <input class="form-control" type="number" value="4" name="largeur">
+		  </div>
+		</div>
+
+		<div class="form-group row">
+		  <label for="hauteur" class="col-2 col-form-label">Hauteur</label>
+		  <div class="col-10">
+		    <input class="form-control" type="number" value="4" name="hauteur">
+		  </div>
+		</div>
+
+		<div class="form-group row">
+		  <label for="couleur" class="col-2 col-form-label">Color</label>
+		  <div class="col-10">
+		    <input class="form-control" type="color" value="#563d7c" name="couleur">
+		  </div>
+		</div>
+
+		<button type="submit" class="btn btn-primary">Créer mon labyrinthe</button>
+
+	</form>
+</div>
+{% endblock %}

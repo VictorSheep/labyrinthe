@@ -1,0 +1,14 @@
+<IfModule mod_rewrite.c>
+	Options -MultiViews
+	RewriteEngine On
+
+	# RewriteBase /path/to/app #facultatif si vous avez un sous dossier
+	# les deux lignes suivantes permettent de ne pas faire de redirection sur des dossiers ou fichiers existant dans l'application (dossier web théoriquement) qui sont exposés à une adresse Web.
+
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_FILENAME} !-f
+
+	# Cette ligne redirige vers l'index.php toutes les routes (n'oubliez pas que le MVC est toujours basé sur du 404, c'est l'application qui sert la réponse en fonction de la logique des routes
+
+	RewriteRule ^ index.php [QSA,L]
+</IfModule>
