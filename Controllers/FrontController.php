@@ -31,6 +31,25 @@ class FrontController{
 		return $this->app->redirect('/labyrinthe');
 	}
 
+	private function getRoomCells($table, $x, $y){
+		$val = $table[$x][$y];
+		$result = [];
+		for ($i=0; $i < count($table); $i++) {
+			for ($j=0; $j < count($table[$i]); $j++) { 
+				if($table[$i][$j] == $val)
+					$result[] = ['x'=>$i, 'y'=>$j];
+			}
+		}
+		return $result;
+	}
+	private function oneRoom($table){
+		for ($x=0; $x < count($table); $x++) { 
+			for ($y=1; $y < count($table[$x]); $y++) { 
+				if($table[$x][$y]!=$table[$x][$y-1]) return(false);
+			}
+		}
+		return(true);
+	}
 	public function generate(){
 		$prepare = $this->app['pdo']->prepare("SELECT * FROM param");
 		$prepare->execute();
@@ -56,8 +75,9 @@ class FrontController{
 		}
 
 		// Génération du labyrinthe
-		for ($k=0; $k < 10; $k++) { 
+		while (1) { 			
 			begin:
+
 			$u = mt_rand(0,$data->hauteur-1);
 			$v = mt_rand(0,$data->largeur-1);
 			$u2= $u;
@@ -80,15 +100,16 @@ class FrontController{
 				$u += $sens;
 				$u2 += ($sens)? 1 : -1;
 
+				// si la case adjacente n'existe pas on recommence le for
 				if (!isset($map[$u2][$v2])) goto begin;
+
 				$val2 = $map[$u2][$v2];
 
 				// echo "<br/>".$u2;
 				if ($val != $val2) {
 					if (isset($map[$u][$v]) && $u!=0) {
 						$hor[$u][$v]=0;
-						if ($sens) $map[$u][$v]=$val;
-						else $map[$u-1][$v]=$val;
+						
 					}
 				}
 			}
@@ -103,14 +124,20 @@ class FrontController{
 				if ($val != $val2) {
 					if (isset($map[$u][$v]) && $v!=0) {
 						$ver[$u][$v]=0;
-						if ($sens) $map[$u][$v]=$val;
-						else $map[$u][$v-1]=$val;
 					}
 				}
 			}
-			echo "<hr/>";
+			// on récupère toutes les cellules de la pièce dont on "ouvre la porte" Pour leur attribuer une nouvelle valeur
+			$roomCells = $this->getRoomCells($map,$u2,$v2);
+			for ($i=0; $i < count($roomCells); $i++) { 
+				$x = $roomCells[$i]['x'];
+				$y = $roomCells[$i]['y'];
+				$map[$x][$y] = $val;
+			}
+			// echo "<hr/>";
+			if ($this->oneRoom($map)) break;
 		}
-
+		
 		/*echo'<pre>';
 			print_r($map);
 		echo'</pre>';*/
