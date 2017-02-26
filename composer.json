@@ -3,7 +3,8 @@
     "description": "Application de generation de labyrinthe parfait",
     "require": {
         "silex/silex": "^2.0",
-        "twig/twig": "^2.1"
+        "twig/twig": "^2.1",
+        "symfony/validator": "^3.2"
     },
     "license": "MIT",
     "authors": [

@@ -1,0 +1,10 @@
+{% if  app.session.getFlashBag.get('errors') is defined %}
+    <ul class="list-group">
+        {% for errors in app.session.getFlashBag.get('errors') %}
+            {% for error in errors %}
+                <li class="list-group-item list-group-item-warning">{{ error.message }}</li>
+                
+            {% endfor %}
+        {% endfor %}
+    </ul>
+{% endif %}

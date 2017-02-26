@@ -21,7 +21,7 @@ class FrontController{
 			'couleur'=>$request->get('couleur')
 		];
 
-		/*$constraint = new Assert\Collection([
+		$constraint = new Assert\Collection([
 			'largeur' => [
 				new Assert\NotBlank(
 					['message' => 'ce champ ne doit pas être vide']
@@ -41,9 +41,19 @@ class FrontController{
 				]), new Assert\Regex([
 					'message' => 'Le nombre de colonne doit être positif',
 					'pattern' => '/^[1-9][0-9]*$/'
-				])]
-		]);*/
+				])],
+			'couleur' => [
+				new Assert\NotBlank(
+					['message' => 'ce champ ne doit pas être vide']
+				)]
+		]);
 
+		$errors = $this->app['validator']->validate($datas, $constraint);
+
+		if (count($errors) > 0) {
+            $this->app['session']->getFlashBag()->add('errors', $errors);
+            return $this->app->redirect('/labyrinthe')
+        ;}
 
 		$prepare = $this->app['pdo']->prepare("DELETE FROM param");
 		$prepare->execute();
@@ -85,6 +95,9 @@ class FrontController{
 		$prepare->execute();
 		$data = $prepare->fetch();
 
+		$mapSize = ($data->hauteur>$data->largeur)? $data->hauteur : $data->largeur;
+		$celSize = round(720/$mapSize);
+
     // Génération des mur verticaux
 		for ($i=0; $i < $data->hauteur; $i++) {
 			for ($j=0; $j < $data->largeur+1; $j++) {
@@ -123,7 +136,7 @@ class FrontController{
 			$sens = mt_rand(0,1);
 
 			if ($axis==0) {
-				$u += $sens;
+				$u += $sens;/**/
 				$u2 += ($sens)? 1 : -1;
 
 				// si la case adjacente n'existe pas on recommence le for
@@ -162,9 +175,9 @@ class FrontController{
 			if ($this->oneRoom($map)) break;
 		}		
 
-		$tables=['ver'=>$ver, 'hor'=>$hor];
+		$tables=['ver'=>$ver, 'hor'=>$hor, 'celSize'=>$celSize];
 
-		return $this->app['twig']->render('labyrinthe.twig', ['data' => $data, 'tables' => $tables]);
+		$this->app['session']->getFlashBag()->add('message', 'Super cool'); return $this->app['twig']->render('labyrinthe.twig', ['data' => $data, 'tables' => $tables]);
 
 	}
 }
