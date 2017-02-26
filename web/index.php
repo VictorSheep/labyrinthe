@@ -33,6 +33,7 @@ $app['database.config'] = [
 
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 $app->register(new Silex\Provider\SessionServiceProvider());
+$app->register(new Silex\Provider\ValidatorServiceProvider());
 
 // loader de twig
 $app->register(new Twig(), [

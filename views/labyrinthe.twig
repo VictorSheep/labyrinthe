@@ -36,7 +36,7 @@
 			{% for wall in hor %}
 
 				{% if wall %}
-					<rect x="{{30*(loop.index0)}}" y="{{30*(loop.parent.loop.index0)}}" width="30" height="2" style="fill:rgb(0,0,255);" />
+					<rect x="{{30*(loop.index0)}}" y="{{30*(loop.parent.loop.index0)}}" width="30" height="2" style="fill:{{data.couleur}};" />
 				{% endif %}
 
 			{% endfor %}
@@ -45,13 +45,12 @@
 		{% for ver in tables.ver %}
 			{% for wall in ver %}
 				{% if wall %}
-					<rect x="{{30*(loop.index0)}}" y="{{30*(loop.parent.loop.index0)}}" width="2" height="30" style="fill:rgb(0,0,255);" />
+					<rect x="{{30*(loop.index0)}}" y="{{30*(loop.parent.loop.index0)}}" width="2" height="30" style="fill:{{data.couleur}};" />
 				{% endif %}
 
 			{% endfor %}
 		{% endfor %}
-			
-
+		
 	</svg>
 </div>
 
